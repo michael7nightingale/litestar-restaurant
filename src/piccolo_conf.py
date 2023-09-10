@@ -1,8 +1,10 @@
 from piccolo.conf.apps import AppRegistry
-from piccolo.engine import SQLiteEngine
+from piccolo.engine import SQLiteEngine, PostgresEngine
+
 
 APP_REGISTRY = AppRegistry(
     apps=["db.piccolo_app"]
 )
 
-DB = SQLiteEngine(path="db.sqlite3")
+from db.config import DB
+

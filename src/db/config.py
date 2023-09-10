@@ -1,4 +1,12 @@
-from piccolo.engine import SQLiteEngine
+from piccolo.engine import PostgresEngine
 
 
-DB = SQLiteEngine(path="db.sqlite3")
+DB = PostgresEngine(
+    config={
+        "database": "hotei",
+        "host": "localhost",
+        "port": 5432,
+        "user": "postgres",
+        "password": "password"
+    }
+)
