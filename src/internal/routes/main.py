@@ -5,6 +5,17 @@ from litestar.response import Template
 class MainController(Controller):
     path = "/"
 
-    @get()
+    @get(name="homepage")
     async def homepage(self) -> Template:
-        return Template("index.html")
+        context = {
+            "title": "Хотей Тавда"
+        }
+        return Template("index.html", context=context)
+
+    @get(path="/contact", name='contact')
+    async def contact(self) -> Template:
+        return Template("contact.html")
+
+    @get(path="/menu", name='menu')
+    async def menu(self) -> Template:
+        return Template("menu.html")
