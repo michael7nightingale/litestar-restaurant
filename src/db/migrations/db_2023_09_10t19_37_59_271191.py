@@ -27,6 +27,32 @@ class Category(Table, tablename="category", schema=None):
     )
 
 
+class Ingredient(Table, tablename="ingredient", schema=None):
+    id = Serial(
+        null=False,
+        primary_key=True,
+        unique=False,
+        index=False,
+        index_method=IndexMethod.btree,
+        choices=None,
+        db_column_name="id",
+        secret=False,
+    )
+
+
+class Product(Table, tablename="product", schema=None):
+    id = Serial(
+        null=False,
+        primary_key=True,
+        unique=False,
+        index=False,
+        index_method=IndexMethod.btree,
+        choices=None,
+        db_column_name="id",
+        secret=False,
+    )
+
+
 class User(Table, tablename="user", schema=None):
     id = Serial(
         null=False,
@@ -40,7 +66,7 @@ class User(Table, tablename="user", schema=None):
     )
 
 
-ID = "2023-09-10T16:30:28:708205"
+ID = "2023-09-10T19:37:59:271191"
 VERSION = "0.120.0"
 DESCRIPTION = ""
 
@@ -55,11 +81,14 @@ async def forwards():
     )
 
     manager.add_table(
-        class_name="User", tablename="user", schema=None, columns=None
+        class_name="IngredientToProduct",
+        tablename="ingredient_to_product",
+        schema=None,
+        columns=None,
     )
 
     manager.add_table(
-        class_name="Sessions", tablename="sessions", schema=None, columns=None
+        class_name="Review", tablename="review", schema=None, columns=None
     )
 
     manager.add_table(
@@ -67,11 +96,19 @@ async def forwards():
     )
 
     manager.add_table(
+        class_name="Ingredient", tablename="ingredient", schema=None, columns=None
+    )
+
+    manager.add_table(
+        class_name="Sessions", tablename="sessions", schema=None, columns=None
+    )
+
+    manager.add_table(
         class_name="Category", tablename="category", schema=None, columns=None
     )
 
     manager.add_table(
-        class_name="Review", tablename="review", schema=None, columns=None
+        class_name="User", tablename="user", schema=None, columns=None
     )
 
     manager.add_column(
@@ -269,14 +306,85 @@ async def forwards():
     )
 
     manager.add_column(
-        table_class_name="User",
-        tablename="user",
-        column_name="name",
-        db_column_name="name",
-        column_class_name="Varchar",
-        column_class=Varchar,
+        table_class_name="IngredientToProduct",
+        tablename="ingredient_to_product",
+        column_name="ingredient",
+        db_column_name="ingredient",
+        column_class_name="ForeignKey",
+        column_class=ForeignKey,
         params={
-            "length": 255,
+            "references": Ingredient,
+            "on_delete": OnDelete.cascade,
+            "on_update": OnUpdate.cascade,
+            "target_column": None,
+            "null": True,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="IngredientToProduct",
+        tablename="ingredient_to_product",
+        column_name="product",
+        db_column_name="product",
+        column_class_name="ForeignKey",
+        column_class=ForeignKey,
+        params={
+            "references": Product,
+            "on_delete": OnDelete.cascade,
+            "on_update": OnUpdate.cascade,
+            "target_column": None,
+            "null": True,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="Review",
+        tablename="review",
+        column_name="user",
+        db_column_name="user",
+        column_class_name="ForeignKey",
+        column_class=ForeignKey,
+        params={
+            "references": User,
+            "on_delete": OnDelete.cascade,
+            "on_update": OnUpdate.cascade,
+            "target_column": None,
+            "null": True,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="Review",
+        tablename="review",
+        column_name="text",
+        db_column_name="text",
+        column_class_name="Text",
+        column_class=Text,
+        params={
             "default": "",
             "null": False,
             "primary_key": False,
@@ -291,54 +399,10 @@ async def forwards():
     )
 
     manager.add_column(
-        table_class_name="User",
-        tablename="user",
-        column_name="phone",
-        db_column_name="phone",
-        column_class_name="Varchar",
-        column_class=Varchar,
-        params={
-            "length": 255,
-            "default": "",
-            "null": False,
-            "primary_key": False,
-            "unique": False,
-            "index": True,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="Sessions",
-        tablename="sessions",
-        column_name="token",
-        db_column_name="token",
-        column_class_name="Varchar",
-        column_class=Varchar,
-        params={
-            "length": 100,
-            "default": "",
-            "null": False,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="Sessions",
-        tablename="sessions",
-        column_name="user_id",
-        db_column_name="user_id",
+        table_class_name="Review",
+        tablename="review",
+        column_name="stars",
+        db_column_name="stars",
         column_class_name="Integer",
         column_class=Integer,
         params={
@@ -350,68 +414,6 @@ async def forwards():
             "index_method": IndexMethod.btree,
             "choices": None,
             "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="Sessions",
-        tablename="sessions",
-        column_name="expiry_date",
-        db_column_name="expiry_date",
-        column_class_name="Timestamp",
-        column_class=Timestamp,
-        params={
-            "default": TimestampOffset(days=0, hours=1, minutes=0, seconds=0),
-            "null": False,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="Sessions",
-        tablename="sessions",
-        column_name="max_expiry_date",
-        db_column_name="max_expiry_date",
-        column_class_name="Timestamp",
-        column_class=Timestamp,
-        params={
-            "default": TimestampOffset(days=7, hours=0, minutes=0, seconds=0),
-            "null": False,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="Sessions",
-        tablename="sessions",
-        column_name="id",
-        db_column_name="id",
-        column_class_name="Serial",
-        column_class=Serial,
-        params={
-            "null": False,
-            "primary_key": True,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": "id",
             "secret": False,
         },
         schema=None,
@@ -571,6 +573,133 @@ async def forwards():
     )
 
     manager.add_column(
+        table_class_name="Ingredient",
+        tablename="ingredient",
+        column_name="name",
+        db_column_name="name",
+        column_class_name="Varchar",
+        column_class=Varchar,
+        params={
+            "length": 50,
+            "default": "",
+            "null": False,
+            "primary_key": False,
+            "unique": True,
+            "index": True,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="Sessions",
+        tablename="sessions",
+        column_name="token",
+        db_column_name="token",
+        column_class_name="Varchar",
+        column_class=Varchar,
+        params={
+            "length": 100,
+            "default": "",
+            "null": False,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="Sessions",
+        tablename="sessions",
+        column_name="user_id",
+        db_column_name="user_id",
+        column_class_name="Integer",
+        column_class=Integer,
+        params={
+            "default": 0,
+            "null": False,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="Sessions",
+        tablename="sessions",
+        column_name="expiry_date",
+        db_column_name="expiry_date",
+        column_class_name="Timestamp",
+        column_class=Timestamp,
+        params={
+            "default": TimestampOffset(days=0, hours=1, minutes=0, seconds=0),
+            "null": False,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="Sessions",
+        tablename="sessions",
+        column_name="max_expiry_date",
+        db_column_name="max_expiry_date",
+        column_class_name="Timestamp",
+        column_class=Timestamp,
+        params={
+            "default": TimestampOffset(days=7, hours=0, minutes=0, seconds=0),
+            "null": False,
+            "primary_key": False,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": None,
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
+        table_class_name="Sessions",
+        tablename="sessions",
+        column_name="id",
+        db_column_name="id",
+        column_class_name="Serial",
+        column_class=Serial,
+        params={
+            "null": False,
+            "primary_key": True,
+            "unique": False,
+            "index": False,
+            "index_method": IndexMethod.btree,
+            "choices": None,
+            "db_column_name": "id",
+            "secret": False,
+        },
+        schema=None,
+    )
+
+    manager.add_column(
         table_class_name="Category",
         tablename="category",
         column_name="name",
@@ -615,37 +744,14 @@ async def forwards():
     )
 
     manager.add_column(
-        table_class_name="Review",
-        tablename="review",
-        column_name="user",
-        db_column_name="user",
-        column_class_name="ForeignKey",
-        column_class=ForeignKey,
+        table_class_name="User",
+        tablename="user",
+        column_name="name",
+        db_column_name="name",
+        column_class_name="Varchar",
+        column_class=Varchar,
         params={
-            "references": User,
-            "on_delete": OnDelete.cascade,
-            "on_update": OnUpdate.cascade,
-            "target_column": None,
-            "null": True,
-            "primary_key": False,
-            "unique": False,
-            "index": False,
-            "index_method": IndexMethod.btree,
-            "choices": None,
-            "db_column_name": None,
-            "secret": False,
-        },
-        schema=None,
-    )
-
-    manager.add_column(
-        table_class_name="Review",
-        tablename="review",
-        column_name="text",
-        db_column_name="text",
-        column_class_name="Text",
-        column_class=Text,
-        params={
+            "length": 255,
             "default": "",
             "null": False,
             "primary_key": False,
@@ -660,18 +766,19 @@ async def forwards():
     )
 
     manager.add_column(
-        table_class_name="Review",
-        tablename="review",
-        column_name="stars",
-        db_column_name="stars",
-        column_class_name="Integer",
-        column_class=Integer,
+        table_class_name="User",
+        tablename="user",
+        column_name="phone",
+        db_column_name="phone",
+        column_class_name="Varchar",
+        column_class=Varchar,
         params={
-            "default": 0,
+            "length": 255,
+            "default": "",
             "null": False,
             "primary_key": False,
             "unique": False,
-            "index": False,
+            "index": True,
             "index_method": IndexMethod.btree,
             "choices": None,
             "db_column_name": None,

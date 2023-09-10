@@ -1,7 +1,7 @@
 from piccolo.apps.user.tables import BaseUser
 from piccolo_admin.example import Sessions
 from piccolo.table import Table
-from piccolo.columns import Varchar, Text, ForeignKey, Integer
+from piccolo.columns import Varchar, Text, ForeignKey, Integer, M2M, LazyTableReference
 
 from .config import DB
 
@@ -22,12 +22,18 @@ class Category(Table, db=DB):
         return self.name
 
 
+class Ingredient(Table, db=DB):
+    name = Varchar(length=50, index=True, unique=True)
+    products = M2M(LazyTableReference("IngredientToProduct", app_name="db"))
+
+
 class Product(Table, db=DB):
     name = Varchar(index=True)
     description = Text()
-    category = ForeignKey(references=Category)
+    category = ForeignKey(Category)
     slug = Varchar(index=True)
     price = Integer()
+    ingredients = M2M(LazyTableReference("IngredientToProduct", app_name="db"))
     discount = Integer(null=True)
     image_path = Varchar()
 
@@ -45,10 +51,20 @@ class Product(Table, db=DB):
         return self.name
 
 
+class IngredientToProduct(Table, db=DB):
+    ingredient = ForeignKey(Ingredient)
+    product = ForeignKey(Product)
+
+
 class Review(Table, db=DB):
-    user = ForeignKey(references=User)
+    user = ForeignKey(User)
     text = Text()
     stars = Integer()
 
 
-table_list = [User, Product, Category, Review, BaseUser, Sessions]
+table_list = [
+    User, Product, Category, Review,
+    BaseUser, Sessions,
+    IngredientToProduct, Ingredient,
+
+]
