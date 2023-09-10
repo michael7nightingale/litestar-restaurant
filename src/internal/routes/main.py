@@ -15,7 +15,3 @@ class MainController(Controller):
     @get(path="/contact", name='contact')
     async def contact(self) -> Template:
         return Template("contact.html")
-
-    @get(path="/menu", name='menu')
-    async def menu(self) -> Template:
-        return Template("menu.html")

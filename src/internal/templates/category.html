@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- ***** Menu Area Starts ***** -->
+<section class="section" id="offers">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 offset-lg-4 text-center">
+                <div class="section-heading">
+                    <h6>Klassy Week</h6>
+                    <h2>This Week’s Special Meal Offers</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row" id="tabs">
+                    <div class="col-lg-12">
+                        <section class='tabs-content'>
+                            <article id='tabs-1'>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="row">
+                                            {% for product in products %}
+                                            <div class="col-lg-12">
+                                                <div class="tab-item">
+                                                    <img src="/static/images/tab-item-01.png" alt="">
+                                                    <h4>{{ product.name }}</h4>
+                                                    <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
+                                                    <div class="price">
+                                                        <h6>$10.50</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                            </article>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ***** Menu Area Ends ***** -->
+
+<script>
+    for (let liEl of document.getElementsByClassName("scroll-to-section")){
+        if (liEl.innerText === "Меню"){
+            liEl.children[0].className = "active"
+        }
+    }
+</script>
+{% endblock %}

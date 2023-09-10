@@ -27,6 +27,19 @@ class Product(Table, db=DB):
     description = Text()
     category = ForeignKey(references=Category)
     slug = Varchar(index=True)
+    price = Integer()
+    discount = Integer(null=True)
+    image_path = Varchar()
+
+    @property
+    def total_price(self) -> int:
+        if self.discount:
+            return int(self.price * (1 - (self.discount / 100)))
+        return self.price
+
+    @property
+    def show_price(self) -> str:
+        return f"{self.total_price} ₽"
 
     def __str__(self):
         return self.name
