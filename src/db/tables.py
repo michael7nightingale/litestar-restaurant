@@ -1,7 +1,7 @@
 from piccolo.apps.user.tables import BaseUser
 from piccolo_admin.example import Sessions
 from piccolo.table import Table
-from piccolo.columns import Varchar, Text, ForeignKey, Integer, M2M, LazyTableReference
+from piccolo.columns import Varchar, Text, ForeignKey, Integer, M2M, LazyTableReference, Date, Boolean
 
 from .config import DB
 
@@ -18,6 +18,8 @@ class Category(Table, db=DB):
     name = Varchar(index=True)
     slug = Varchar(index=True)
 
+    image_path = Varchar()
+
     def __str__(self):
         return self.name
 
@@ -33,8 +35,12 @@ class Product(Table, db=DB):
     category = ForeignKey(Category)
     slug = Varchar(index=True)
     price = Integer()
-    ingredients = M2M(LazyTableReference("IngredientToProduct", app_name="db"))
     discount = Integer(null=True)
+    has_ingredients = Boolean(default=True)
+    ingredients = M2M(LazyTableReference("IngredientToProduct", app_name="db"))
+    caloricity = Integer(null=True)    # в КДж
+    weight = Integer(null=True)        # в граммах
+    volume = Integer(null=True)        # в мл
     image_path = Varchar()
 
     @property
@@ -62,9 +68,18 @@ class Review(Table, db=DB):
     stars = Integer()
 
 
+class TableReservation(Table, db=DB):
+    name = Varchar(length=100)
+    phone = Varchar(length=20)
+    number_of_guests = Integer()
+    date = Date()
+    message = Text()
+
+
 table_list = [
     User, Product, Category, Review,
     BaseUser, Sessions,
     IngredientToProduct, Ingredient,
+    TableReservation,
 
 ]
