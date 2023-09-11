@@ -9,7 +9,7 @@ services:
     env_file: "src/.env"
     command: >
       sh -c "piccolo migrations forwards all &&
-             uvicorn app:app --reload --host 0.0.0.0"
+             uvicorn app:create_app --reload --host 0.0.0.0"
     depends_on:
       - db
     networks:
@@ -21,7 +21,7 @@ services:
       - "5433:5433"
     environment:
       - POSTGRES_DB=hotei
-      - POSTGRES_USER=admin
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     networks:
       - default
