@@ -1,10 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block content %}
+<!-- ***** Menu Area Starts ***** -->
+<section class="section" id="menu">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <img src="/static/images/product/{{ product.image_path }}" width="100%"/>
+            </div>
+            <div class="row" style="margin: 30px">
+                <div class="col">
+                    <h4 style="margin-bottom: 30px">
+                        <a href="{{ url_for('category', category_slug=product['category.slug']) }}">
+                        {{ product['category.name'] }}
+                        </a> - {{ product.name }}
+                    </h4>
+                    {% if product.has_ingredients %}
+                    <h6>Ингридиенты: {{ product.ingredients|join(", ") }}</h6>
+                    {% endif %}
+
+                    {% if product.caloricity %}
+                    <h6>Калорийность: {{ product.caloricity }} КДж</h6>
+                    {% endif %}
+
+                    {% if product.weight %}
+                    <h6>Вес: {{ product.weight }} г</h6>
+                    {% endif %}
+
+                    {% if product.volume %}
+                    <h6>Объем: {{ product.volume }} мл</h6>
+                    {% endif %}
+
+                </div>
+                <div class="col">
+                    <div class="price">
+                        <h6>{{ product.price }} ₽</h6>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ***** Menu Area Ends ***** -->
+
+<script>
+    for (let liEl of document.getElementsByClassName("scroll-to-section")){
+        if (liEl.innerText === "Меню"){
+            liEl.children[0].className = "active"
+        }
+    }
+</script>
+{% endblock %}

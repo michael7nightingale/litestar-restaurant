@@ -7,8 +7,8 @@
         <div class="row">
             <div class="col-lg-4 offset-lg-4 text-center">
                 <div class="section-heading">
-                    <h6>Klassy Week</h6>
-                    <h2>This Week’s Special Meal Offers</h2>
+<!--                    <h6>Klassy Week</h6>-->
+                    <h2>Меню</h2>
                 </div>
             </div>
         </div>
@@ -23,7 +23,7 @@
                                         {% for category in categories %}
                                         <li onclick="categoryLocation(event)">
                                             <a base-url="{{ url_for('menu') }}" path="{{ category.slug }}">
-                                                <img src="/static/images/tab-icon-01.png" alt="">
+                                                <img src="/static/images/tab-icon-01.png" alt="{{ category.name }}">
                                                 {{ category.name }}
                                             </a>
                                         </li>

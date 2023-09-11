@@ -7,41 +7,34 @@
         <div class="row">
             <div class="col-lg-4 offset-lg-4 text-center">
                 <div class="section-heading">
-                    <h6>Klassy Week</h6>
-                    <h2>This Week’s Special Meal Offers</h2>
+<!--                    <h6>Klassy Week</h6>-->
+                    <h2>{{ category.name }}</h2>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row" id="tabs">
-                    <div class="col-lg-12">
-                        <section class='tabs-content'>
-                            <article id='tabs-1'>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="row">
-                                            {% for product in products %}
-                                            <div class="col-lg-12">
-                                                <div class="tab-item">
-                                                    <img src="/static/images/tab-item-01.png" alt="">
-                                                    <h4>{{ product.name }}</h4>
-                                                    <p>Lorem ipsum dolor sit amet, consectetur koit adipiscing elit, sed do.</p>
-                                                    <div class="price">
-                                                        <h6>$10.50</h6>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {% endfor %}
-                                            </div>
-                                        </div>
-                                    </div>
-                            </article>
-                        </section>
+        <section class='tabs-content'>
+            <article id='tabs-1'>
+                <div class="row">
+                    {% for product in products %}
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-4">
+                                <a href="{{ url_for('product', product_slug=product['slug'], category_slug=product['category.slug']) }}">
+                                    <img src="/static/images/product/{{ product['image_path'] }}">
+                                </a>
+                            </div>
+                            <div class="col" style="margin: auto">
+                                <a>{{ product['name'] }}</a>
+                            </div>
+                            <div class="col price">
+                                <h6>{{ product['price'] }} ₽</h6>
+                            </div>
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-            </div>
-        </div>
+            </article>
+        </section>
     </div>
 </section>
 <!-- ***** Menu Area Ends ***** -->

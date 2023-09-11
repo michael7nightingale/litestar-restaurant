@@ -968,7 +968,7 @@ menu
 }
 
 #menu .price h6 {
-  position: absolute;
+  /*position: absolute;*/
   width: 70px;
   height: 70px;
   background-color: #fb5849;
