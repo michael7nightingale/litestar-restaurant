@@ -6,7 +6,7 @@ from litestar.static_files import StaticFilesConfig
 from pathlib import Path
 
 from internal.routes import route_handlers
-from .admin import admin_app
+from .admin import admin_app, create_superuser
 
 
 class App:
@@ -26,5 +26,9 @@ class App:
                     path="/static"
                 )
             ],
+            on_startup=[self.on_startup]
 
         )
+
+    async def on_startup(self, app):
+        await create_superuser()
