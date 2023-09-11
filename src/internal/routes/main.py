@@ -14,4 +14,19 @@ class MainController(Controller):
 
     @get(path="/contact", name='contact')
     async def contact(self) -> Template:
-        return Template("contact.html")
+        context = {
+            "phone_numbers": [
+                {
+                    'number': "+7 (993) 774-08-34",
+                    "description": "Администратор"
+                }
+            ],
+            "emails": [
+                {
+                    "email": "hotei@tave.com",
+                    "description": ""
+                }
+            ],
+
+        }
+        return Template("contact.html", context=context)
