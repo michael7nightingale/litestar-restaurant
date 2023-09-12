@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section" id="reservation">
+    <div class="container">
+        <h3 style="text-align: center; color: white; margin: 20px">Вход</h3>
+        <div class="" style="margin: auto; max-width: 300px">
+            <form method="post">
+                <label style="color: white" for="phone">Номер телефона:</label>
+                <input type="text" required id="phone" name="phone" class="form-control" placeholder="Номер телефона"/>
+                <div class="row">
+                    <div class="col">
+                       <button style="margin: auto; margin-top: 20px" type="submit" class="btn btn-primary">Войти</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    for (let liEl of document.getElementsByClassName("scroll-to-section")){
+        if (liEl.innerText === "Аккаунт"){
+            liEl.children[0].className = "active"
+        }
+    }
+</script>
+{% endblock %}
