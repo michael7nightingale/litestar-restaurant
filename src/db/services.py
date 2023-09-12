@@ -1,6 +1,6 @@
 import datetime
 
-from .tables import Ingredient, Product, Category, TableReservation
+from .tables import Ingredient, Product, Category, TableReservation, User
 
 
 async def get_all_categories() -> list[dict]:
@@ -55,4 +55,12 @@ async def create_table_reservation(
             date=date,
             message=message
         )
+    )
+
+
+async def get_user(user_id: str) -> dict:
+    return await (
+        User.select()
+        .where(User.id == user_id)
+        .first()
     )
