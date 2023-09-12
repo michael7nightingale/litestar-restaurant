@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     SUPERUSER_USERNAME: str
     SUPERUSER_PASSWORD: str
 
+    EXPIRE_MINUTES: int = 1200
+    SECRET_KEY: str = "asdpioajosidfajlsfka"
+    ALGORITHM: str = "HS256"
+
     class Config:
         env_file = ".env"
 
