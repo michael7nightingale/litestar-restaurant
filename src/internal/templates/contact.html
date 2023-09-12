@@ -10,7 +10,7 @@
                         <h6>Свяжитесь с нами</h6>
                         <h2>Вы можете забронировать слотик здесь или в нашем кафе.</h2>
                     </div>
-                    <p>Здесь будет описание</p>
+                    <p>Заполните форму, после чего с вами свяжется работник ресторана в течение часа.</p>
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="phone">
@@ -60,7 +60,8 @@
                         </div>
                         <div class="col-md-6 col-sm-12">
                             <fieldset>
-                                <select required value="number-guests" name="number-guests"  id="number-guests">
+                                <select required value="number_of_guests" name="number_of_guests"  id="number-guests">
+                                <option value="">Количество гостей</option>
                                 <option name="1" id="1">1</option>
                                 <option name="2" id="2">2</option>
                                 <option name="3" id="3">3</option>
@@ -79,7 +80,7 @@
                         <div class="col-lg-6">
                             <div id="filterDate2">
                                 <div class="input-group date" data-date-format="dd/mm/yyyy">
-                                    <input  name="date" id="date" type="text" class="form-control" placeholder="дд/мм/гггг">
+                                    <input required name="date" id="date" type="date" class="form-control" placeholder="дд/мм/гггг">
                                     <div class="input-group-addon" >
                                     <span class="glyphicon glyphicon-th"></span>
                                 </div>
