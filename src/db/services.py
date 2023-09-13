@@ -58,9 +58,29 @@ async def create_table_reservation(
     )
 
 
-async def get_user(user_id: str) -> dict:
+async def get_user(user_id: str | int) -> dict:
     return await (
         User.select()
         .where(User.id == user_id)
         .first()
+    )
+
+
+async def login_user(phone: str) -> dict | None:
+    user = await (
+        User.select()
+        .where(User.phone == phone)
+        .first()
+    )
+    return user if user else None
+
+
+async def create_user(name: str, phone: str) -> dict:
+    return await (
+        User.insert(
+            User(
+                name=name,
+                phone=phone
+            )
+        )
     )
