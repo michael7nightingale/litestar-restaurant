@@ -53,7 +53,7 @@ def auth_exception_handler(request: Request, exc: HTTPException) -> Response:
 
 
 def login_required(func):
-    async def inner(request: Request, *args, **kwargs):
+    async def inner(request: Request, *args, **kwargs) -> Response:
         res = await func(request, *args, **kwargs)
         return res
     return inner
