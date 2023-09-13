@@ -3,6 +3,7 @@ from litestar.exceptions import HTTPException
 from litestar.template.config import TemplateConfig
 from litestar.contrib.jinja import JinjaTemplateEngine
 from litestar.static_files import StaticFilesConfig
+from litestar.middleware import DefineMiddleware
 
 from pathlib import Path
 
@@ -29,7 +30,10 @@ class App:
                 )
             ],
             on_startup=[self.on_startup],
-            middleware=[AuthenticationMiddleware],
+            middleware=[
+                DefineMiddleware(AuthenticationMiddleware),
+
+            ],
             exception_handlers={
                 HTTPException: auth_exception_handler,
             }

@@ -1,13 +1,12 @@
-from datetime import datetime, timedelta
-
 from litestar.connection import ASGIConnection
 from litestar.types import Send, Scope, Receive, ASGIApp
 from litestar import Request, Response
 from litestar.response import Redirect
-from litestar.middleware import MiddlewareProtocol
+from litestar.middleware import AbstractAuthenticationMiddleware, AuthenticationResult
 from litestar.exceptions import HTTPException
 
 from pydantic import BaseModel
+from datetime import datetime, timedelta
 
 from settings import get_settings
 from db.services import get_user
@@ -15,11 +14,11 @@ from jose import jwt, JWTError
 
 
 class Token(BaseModel):
-    user_id: str | int
+    user_id: int
     exp: datetime
 
 
-class User(BaseModel):
+class ScopeUser(BaseModel):
     name: str
 
 
@@ -70,7 +69,8 @@ def logout_user(request: Request) -> None:
         del request.cookies['authorization']
 
 
-class AuthenticationMiddleware(MiddlewareProtocol):
+class AuthenticationMiddleware(AbstractAuthenticationMiddleware):
+
     def __init__(self, app: "ASGIApp") -> None:
         self.app = app
 
@@ -80,12 +80,21 @@ class AuthenticationMiddleware(MiddlewareProtocol):
             return
         return token
 
-    async def __call__(self, scope: "Scope", receive: "Receive", send: "Send") -> None:
-        token = self.get_token(ASGIConnection(scope, receive, send))
+    async def authenticate_request(self, connection: ASGIConnection) -> AuthenticationResult:
+        token = self.get_token(connection)
         if token is not None:
             token_model = decode_jwt_token(token)
             if token_model is not None:
                 user_data = await get_user(token_model.user_id)
-                user = User(**user_data)
-                scope['user'] = user
+                user = ScopeUser(**user_data)
+                return AuthenticationResult(
+                    user=user,
+                    auth=token
+                )
+        return AuthenticationResult(None, None)
+
+    async def __call__(self, scope: "Scope", receive: "Receive", send: "Send") -> None:
+        auth_result = await self.authenticate_request(ASGIConnection(scope, receive, send))
+        scope['user'] = auth_result.user
+        scope['auth'] = auth_result.auth
         await self.app(scope, receive, send)
