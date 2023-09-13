@@ -50,7 +50,7 @@ def decode_jwt_token(encoded_token: str) -> Token | None:
 
 
 def auth_exception_handler(request: Request, exc: HTTPException) -> Response:
-    return Redirect("/users/login")
+    return Redirect(request.app.route_reverse("login"))
 
 
 def login_required(func):
