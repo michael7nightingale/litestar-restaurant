@@ -8,7 +8,7 @@ from .config import DB
 
 class User(Table, db=DB):
     name = Varchar(required=True)
-    phone = Varchar(index=True, required=True)
+    phone = Varchar(index=True, required=True, unique=True)
 
     def __str__(self):
         return self.name
