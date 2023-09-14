@@ -5,21 +5,12 @@ from litestar.response import Redirect
 from litestar.middleware import AbstractAuthenticationMiddleware, AuthenticationResult
 from litestar.exceptions import HTTPException
 
-from pydantic import BaseModel
 from datetime import datetime, timedelta
+from jose import jwt, JWTError
 
 from settings import get_settings
 from db.services import get_user
-from jose import jwt, JWTError
-
-
-class Token(BaseModel):
-    user_id: int
-    exp: datetime
-
-
-class ScopeUser(BaseModel):
-    name: str
+from schemas.token import Token, ScopeUser
 
 
 def encode_jwt_token(user_id) -> str | None:
@@ -75,7 +66,7 @@ class AuthenticationMiddleware(AbstractAuthenticationMiddleware):
         self.app = app
 
     def get_token(self, connection: ASGIConnection) -> str | None:
-        token = connection.cookies.get('authorization')
+        token = connection.headers.get("authorization") or connection.cookies.get('authorization')
         if token is None:
             return
         return token

@@ -4,7 +4,7 @@ from .tables import Ingredient, Product, Category, TableReservation, User
 
 
 async def get_all_categories() -> list[dict]:
-    return await Category.select(Category.name, Category.slug)
+    return await Category.select()
 
 
 async def get_category_by_slug(category_slug: str) -> dict:
@@ -31,6 +31,21 @@ async def get_product_with_ingredients_by_slug(category_slug, product_slug: str)
                 Product.all_columns(),
                 Product.category.name, Product.category.slug,
                 Product.ingredients(Ingredient.name, as_list=True)
+            )
+        .where(
+                Product.slug == product_slug,
+                Product.category.slug == category_slug
+            )
+        .first()
+    )
+
+
+async def get_product_with_ingredients_full_by_slug(category_slug, product_slug: str) -> dict:
+    return await (
+        Product.select(
+                Product.all_columns(),
+                Product.category.name, Product.category.slug,
+                Product.ingredients()
             )
         .where(
                 Product.slug == product_slug,
@@ -75,12 +90,15 @@ async def login_user(phone: str) -> dict | None:
     return user if user else None
 
 
-async def create_user(name: str, phone: str) -> dict:
-    return await (
-        User.insert(
-            User(
-                name=name,
-                phone=phone
+async def create_user(name: str, phone: str) -> dict | None:
+    try:
+        return await (
+            User.insert(
+                User(
+                    name=name,
+                    phone=phone
+                )
             )
         )
-    )
+    except:
+        return None

@@ -7,7 +7,7 @@ from litestar.params import Body
 from typing import Annotated
 
 from db.services import login_user, create_user
-from schemas.users import UserLogin, UserCreate
+from schemas.users import UserLoginSchema, UserRegisterSchema
 from internal.core.auth import login_user as login_user_cookies, login_required, logout_user
 
 
@@ -27,7 +27,7 @@ class UsersController(Controller):
     async def post_login(
             self,
             request: Request,
-            data: Annotated[UserLogin, Body(media_type=RequestEncodingType.URL_ENCODED)]
+            data: Annotated[UserLoginSchema, Body(media_type=RequestEncodingType.URL_ENCODED)]
     ) -> Redirect:
         user = await login_user(data.phone)
         if user is None:
@@ -43,7 +43,7 @@ class UsersController(Controller):
     async def post_register(
             self,
             request: Request,
-            data: Annotated[UserCreate, Body(media_type=RequestEncodingType.URL_ENCODED)]
+            data: Annotated[UserRegisterSchema, Body(media_type=RequestEncodingType.URL_ENCODED)]
     ) -> Redirect:
         try:
             user = await create_user(**data.dict())
@@ -55,5 +55,4 @@ class UsersController(Controller):
     async def get_account(self, request: Request) -> list:
         if request.user is None:
             raise HTTPException(status_code=303)
-
         return []

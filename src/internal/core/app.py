@@ -7,18 +7,15 @@ from litestar.middleware import DefineMiddleware
 
 from pathlib import Path
 
-from internal.routes import route_handlers
+from internal.routes import routers
 from .admin import admin_app, create_superuser
 from .auth import AuthenticationMiddleware, auth_exception_handler
 
 
 class App:
     def __init__(self):
-        handlers = route_handlers.copy()
-        handlers.append(admin_app)
-
         self.app = Litestar(
-            route_handlers=handlers,
+            route_handlers=[admin_app],
             template_config=TemplateConfig(
                 directory=Path("internal/templates"),
                 engine=JinjaTemplateEngine
@@ -39,6 +36,11 @@ class App:
             }
 
         )
+
+        for router in routers:
+            self.app.register(router)
+
+        print([i.path for i in self.app.routes])
 
     async def on_startup(self, app):
         await create_superuser()

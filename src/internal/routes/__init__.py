@@ -1,6 +1,5 @@
-from .users import UsersController
-from .main import MainController, ContactController
-from .menu import MenuController
+from .fullstack import fullstack_router
+from .api import api_router
 
 
-route_handlers = [UsersController, MainController, MenuController, ContactController]
+routers = [fullstack_router, api_router]
