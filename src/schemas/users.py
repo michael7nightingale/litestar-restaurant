@@ -1,16 +1,10 @@
-from litestar.contrib.piccolo import PiccoloDTO
 from pydantic import BaseModel
 
-from db.tables import User
 
-
-UserDTO = PiccoloDTO[User]
-
-
-class UserCreate(BaseModel):
+class UserRegisterSchema(BaseModel):
     name: str
     phone: str
 
 
-class UserLogin(BaseModel):
+class UserLoginSchema(BaseModel):
     phone: str
