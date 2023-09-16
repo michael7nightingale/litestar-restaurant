@@ -1,8 +1,9 @@
 from litestar import Router
 
 from .users import UsersController
-from .main import MainController, ContactController
+from .main import MainController, TableReservationController, ReviewsController
 from .menu import MenuController
+from .cart import CartController
 
 
 fullstack_router = Router(
@@ -10,7 +11,9 @@ fullstack_router = Router(
         UsersController,
         MainController,
         MenuController,
-        ContactController,
+        TableReservationController,
+        ReviewsController,
+        CartController,
 
     ],
     path="/"
