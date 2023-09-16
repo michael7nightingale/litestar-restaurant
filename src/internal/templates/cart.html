@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="section" id="reservation">
+    <div class="container">
+
+    </div>
+</section>
+<script>
+    for (let liEl of document.getElementsByClassName("scroll-to-section")){
+        if (liEl.innerText === "Аккаунт"){
+            liEl.children[0].className = "active"
+        }
+    }
+</script>
+{% endblock %}
