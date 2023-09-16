@@ -1,12 +1,16 @@
-from typing import Annotated
-
 from litestar import get, Controller, post, Request
 from litestar.params import Body
 from litestar.enums import RequestEncodingType
 from litestar.response import Template, Redirect
 
-from db.services import create_table_reservation
-from schemas.main import Reservation
+from typing import Annotated
+
+from db.services import (
+    create_table_reservation,
+    create_review, get_reviews,
+
+)
+from schemas.main import Reservation, Review
 
 
 class MainController(Controller):
@@ -19,11 +23,7 @@ class MainController(Controller):
         }
         return Template("index.html", context=context)
 
-
-class ContactController(Controller):
-    path = "/contact"
-
-    @get(name='contact')
+    @get("/contact", name='contact')
     async def contact_get(self) -> Template:
         context = {
             "phone_numbers": [
@@ -42,11 +42,41 @@ class ContactController(Controller):
         }
         return Template("contact.html", context=context)
 
-    @post(name='contact_post', status_code=303)
-    async def contact_create(
+
+class TableReservationController(Controller):
+    path = "/table-reservation"
+
+    @get(name="table_reservation")
+    async def table_reservation(self) -> Template:
+        return Template("table-reservation.html")
+
+    @post(name='table_reservation_post', status_code=303)
+    async def table_reservation_create(
             self,
             request: Request,
             data: Annotated[Reservation, Body(media_type=RequestEncodingType.URL_ENCODED)]
     ) -> Redirect:
         await create_table_reservation(**data.dict())
-        return Redirect(request.app.route_reverse("contact"))
+        return Redirect(request.app.route_reverse("table_reservation"))
+
+
+class ReviewsController(Controller):
+    path = "/reviews"
+
+    @get(name="reviews")
+    async def reviews(self) -> Template:
+        context = {
+            "reviews": await get_reviews()
+        }
+        return Template("reviews.html", context=context)
+
+    @post(name='reviews_post', status_code=303)
+    async def reviews_create(
+            self,
+            request: Request,
+            data: Annotated[Review, Body(media_type=RequestEncodingType.URL_ENCODED)]
+    ) -> Redirect:
+        if not request.user:
+            return Redirect(request.app.route_reverse("login"))
+        await create_review(user_id=request.user.id, **data.dict())
+        return Redirect(request.app.route_reverse("reviews"))
