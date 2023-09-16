@@ -1,7 +1,7 @@
 from piccolo.apps.user.tables import BaseUser
 from piccolo_admin.example import Sessions
 from piccolo.table import Table
-from piccolo.columns import Varchar, Text, ForeignKey, Integer, M2M, LazyTableReference, Date, Boolean
+from piccolo.columns import Varchar, Text, ForeignKey, Integer, M2M, LazyTableReference, Date, Boolean, Timestamp
 
 from .config import DB
 
@@ -64,7 +64,7 @@ class IngredientToProduct(Table, db=DB):
 
 class Review(Table, db=DB):
     user = ForeignKey(User)
-    text = Text()
+    message = Text()
     stars = Integer()
 
 
@@ -76,10 +76,34 @@ class TableReservation(Table, db=DB):
     message = Text()
 
 
+class Cart(Table, db=DB):
+    user = ForeignKey(User, unique=True, index=True)
+    goods = M2M(LazyTableReference("CartToGood", app_name="db"))
+
+
+class CartToProduct(Table, db=DB):
+    product = ForeignKey(Product)
+    cart = ForeignKey(Cart)
+    amount = Integer()
+
+
+class Order(Table, db=DB):
+    cart = ForeignKey(Cart, unique=True, index=True)
+    street = Varchar()
+    home = Varchar()
+    comment = Varchar()
+    status = Varchar()
+    time_created = Timestamp()
+    is_delivered = Boolean(default=False)
+
+
 table_list = [
-    User, Product, Category, Review,
+    User,
+    Product, Category, Review,
     BaseUser, Sessions,
     IngredientToProduct, Ingredient,
     TableReservation,
+    Cart, CartToProduct,
+    Order,
 
 ]
