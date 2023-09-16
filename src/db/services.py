@@ -1,6 +1,6 @@
 import datetime
 
-from .tables import Ingredient, Product, Category, TableReservation, User
+from .tables import Ingredient, Product, Category, TableReservation, User, Review, Cart, CartToProduct
 
 
 async def get_all_categories() -> list[dict]:
@@ -92,7 +92,7 @@ async def login_user(phone: str) -> dict | None:
 
 async def create_user(name: str, phone: str) -> dict | None:
     try:
-        return await (
+        users = await (
             User.insert(
                 User(
                     name=name,
@@ -100,5 +100,33 @@ async def create_user(name: str, phone: str) -> dict | None:
                 )
             )
         )
-    except:
+        await Cart.insert(
+            Cart(user=users[0]['id'])
+        )
+    except Exception:
         return None
+
+
+async def get_reviews() -> list[dict]:
+    return await (
+        Review.select(Review.all_columns(), Review.user.name)
+    )
+
+
+async def create_review(user_id: str, stars: int, message: str) -> dict:
+    return await (
+        Review.insert(
+            Review(
+                user=user_id,
+                stars=stars,
+                message=message
+            )
+        )
+    )
+
+
+async def get_cart(user_id: int) -> list[dict]:
+    return await (
+        CartToProduct.select(CartToProduct.product.all_columns(), CartToProduct.amount, CartToProduct.cart.id)
+        .where(CartToProduct.cart.user == user_id)
+    )
