@@ -1,5 +1,4 @@
 from litestar import Controller, get, post, Request
-from litestar.exceptions import HTTPException
 from litestar.enums import RequestEncodingType
 from litestar.response import Template, Redirect
 
@@ -8,7 +7,7 @@ from typing import Annotated
 
 from db.services import login_user, create_user
 from schemas.users import UserLoginSchema, UserRegisterSchema
-from internal.core.auth import login_user as login_user_cookies, login_required, logout_user
+from internal.core.auth import login_user as login_user_cookies, logout_user
 
 
 class UsersController(Controller):
@@ -45,14 +44,7 @@ class UsersController(Controller):
             request: Request,
             data: Annotated[UserRegisterSchema, Body(media_type=RequestEncodingType.URL_ENCODED)]
     ) -> Redirect:
-        try:
-            user = await create_user(**data.dict())
-        except Exception:
+        user = await create_user(**data.dict())
+        if user is None:
             return Redirect(request.app.route_reverse("register"))
         return Redirect(request.app.route_reverse("login"))
-
-    @get("/account", name="account")
-    async def get_account(self, request: Request) -> list:
-        if request.user is None:
-            raise HTTPException(status_code=303)
-        return []
