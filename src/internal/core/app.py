@@ -40,7 +40,5 @@ class App:
         for router in routers:
             self.app.register(router)
 
-        print([i.path for i in self.app.routes])
-
     async def on_startup(self, app):
         await create_superuser()
