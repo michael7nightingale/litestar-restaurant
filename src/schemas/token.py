@@ -9,4 +9,5 @@ class Token(BaseModel):
 
 
 class ScopeUser(BaseModel):
+    id: int
     name: str
