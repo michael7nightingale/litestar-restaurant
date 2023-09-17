@@ -1,10 +1,80 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="section" id="reservation">
-    <div class="container">
+<style>
+ul.separator {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
 
-    </div>
+ul.separator li {
+  padding: .5em 0;
+  border-top: 1px solid #CCC;
+  border-bottom: 1px solid #CCC;
+}
+
+/*ul.separator li:last-child {*/
+/*  border-bottom: 0;*/
+/*}*/
+
+</style>
+<section class="section" id="menu">
+<div class="container">
+    <h2 style="text-align: center; margin-bottom: 20px">Корзина</h2>
+
+   <section class='tabs-content'>
+        <article id='tabs-1'>
+            <ul class="separator" id="rows">
+                {% for cart_product in cart %}
+                <li class="col" id="li{{ cart_product['product.id'] }}">
+                    <div class="row">
+                        <div class="col">
+                            <img src="/static/images/product/{{ cart_product['product.image_path'] }}" width="100px"/>
+                        </div>
+                        <div class="col" style="margin: auto">
+                            <a>{{ cart_product['product.name'] }} </a>
+                        </div>
+                        <div class="col price">
+                            {% if cart_product['product.discount'] %}
+                            <h6 id="price{{ cart_product['product.id'] }}">{{ ((cart_product['product.price'] -  cart_product['product.price'] * (cart_product['product.discount']/100))) * cart_product['amount'] }} ₽</h6>
+                            {% else %}
+                            <h6 id="price{{ cart_product['product.id'] }}">{{ cart_product['product.price'] * cart_product['amount'] }} ₽</h6>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin: auto">
+                        <div class="col-1" style="margin: auto">
+                            <button class="btn btn-outline-primary"
+                                    {% if cart_product['product.discount'] %}
+                                        onclick="decrementPrice({{ cart_product['product.price'] }},  {{ cart_product['product.discount'] }}, {{ cart_product['product.id'] }})"
+                                    {% else %}
+                                          onclick="decrementPrice({{ cart_product['product.price'] }}, 0, {{ cart_product['product.id'] }})"
+                                    {% endif %}
+                                    style="border-radius: 50%; height: 30px; width: 30px; text-align: center">-</button>
+                        </div>
+                        <div class="col-2" style="margin: auto">
+                            <input id="amount{{ cart_product['amount'] }}" class="form-control" type="number" value="{{ cart_product.amount }}" style="width: 100px">
+                        </div>
+                        <div class="col-1" style="margin: auto">
+                            <button class="btn btn-outline-primary"
+                                    {% if cart_product['product.discount'] %}
+                                        onclick="incrementPrice({{ cart_product['product.price'] }},  {{ cart_product['product.discount'] }}, {{ cart_product['product.id'] }})"
+                                    {% else %}
+                                          onclick="incrementPrice({{ cart_product['product.price'] }}, 0, {{ cart_product['product.id'] }})"
+                                    {% endif %}
+                                    style="border-radius: 50%; height: 30px; width: 30px; text-align: center">+</button>
+                        </div>
+                        <div class="col-1" style="margin: auto">
+                            <span style="width: 40px; height: 40px; color: red" class="fa fa-trash" onclick="deleteProduct({{ cart_product['product.id'] }})"></span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </article>
+    </section>
+</div>
 </section>
 <script>
     for (let liEl of document.getElementsByClassName("scroll-to-section")){
@@ -12,5 +82,72 @@
             liEl.children[0].className = "active"
         }
     }
+
+    let priceLabel = document.getElementById("price");
+    let amountInput = document.getElementById("amount");
+
+    function decrementPrice(price, discount, productId){
+        let priceLabel = document.getElementById(`price${productId}`);
+        let amountInput = document.getElementById(`amount${productId}`);
+        let amount = parseInt(amountInput.value);
+        if (amount <= 1) return
+        amount -= 1
+        amountInput.value = amount;
+        price = parseInt(price);
+        discount = parseInt(discount);
+        let newPrice = parseInt((price - (price * (discount / 100))) * amount);
+        priceLabel.innerText = `${newPrice} ₽`
+          $.ajax(
+            {
+                url: `/api/cart/${productId}`,
+                data: JSON.stringify({amount: amount}),
+                method: "patch",
+                    headers: {'Authorization': document.cookie['']},
+                success: function success(data){
+                    console.log(data)
+                }
+            },
+                )
+    }
+
+    function incrementPrice(price, discount, productId){
+        let priceLabel = document.getElementById(`price${productId}`);
+        let amountInput = document.getElementById(`amount${productId}`);
+        let amount = parseInt(amountInput.value);
+        amount += 1;
+        amountInput.value = amount;
+        price = parseInt(price);
+        discount = parseInt(discount);
+        let newPrice = parseInt((price - (price * (discount / 100))) * amount);
+        priceLabel.innerText = `${newPrice} ₽`;
+         $.ajax(
+           {
+               url: `/api/cart/${productId}`,
+               data: JSON.stringify({amount: amount}),
+               method: "patch",
+                   headers: {'Authorization': document.cookie['']},
+               success: function success(data){
+                   console.log(data)
+               }
+           },
+               )
+    }
+
+    function deleteProduct(productId){
+        let liElement = document.getElementById(`li${productId}`);
+        liElement.parentElement.removeChild(liElement)
+
+        $.ajax(
+            {
+                url: `/api/cart/${productId}`,
+                method: "delete",
+                    headers: {'Authorization': document.cookie['']},
+                success: function success(data){
+                    console.log(data)
+                }
+            },
+                )
+    }
+
 </script>
 {% endblock %}
