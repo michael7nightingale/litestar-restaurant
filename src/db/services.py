@@ -127,6 +127,43 @@ async def create_review(user_id: str, stars: int, message: str) -> dict:
 
 async def get_cart(user_id: int) -> list[dict]:
     return await (
-        CartToProduct.select(CartToProduct.product.all_columns(), CartToProduct.amount, CartToProduct.cart.id)
+        CartToProduct.select(
+            CartToProduct.product.all_columns(),
+            CartToProduct.amount,
+            CartToProduct.cart.id,
+            CartToProduct.product.category.all_columns()
+        )
         .where(CartToProduct.cart.user == user_id)
+    )
+
+
+async def get_cart_product(product_id: int, user_id: int) -> dict | None:
+    return await (
+        CartToProduct.select(CartToProduct.all_columns(), CartToProduct.product.all_columns())
+        .where(CartToProduct.product.id == product_id, CartToProduct.cart.user.id == user_id)
+        .first()
+    )
+
+
+async def add_product_to_cart(product_id: int, user_id: str) -> dict | None:
+    cart = await Cart.select().where(Cart.user == user_id).first()
+    return await (
+        CartToProduct.insert(
+            CartToProduct(product=product_id, cart=cart['id'], amount=1)
+        )
+    )
+
+
+async def update_cart_product(product_id: int, **values) -> None:
+    update_causes = {getattr(CartToProduct, k): v for k, v in values.items()}
+    await (
+        CartToProduct.update(update_causes)
+        .where(CartToProduct.id == product_id)
+    )
+
+
+async def delete_cart_product(product_id: int) -> None:
+    await (
+        CartToProduct.delete()
+        .where(CartToProduct.id == product_id)
     )
