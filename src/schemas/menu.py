@@ -1,11 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class ProductListSchema(BaseModel):
-    id: str | int
+    id: int
     name: str
     slug: str
-    category: str | int
+    category: int = Field(alias="category_id")
     price: int
     discount: int | None = None
     has_ingredients: bool
@@ -16,7 +16,7 @@ class ProductListSchema(BaseModel):
 
 
 class CategoryListSchema(BaseModel):
-    id: str | int
+    id: int
     name: str
     slug: str
     image_path: str | None = None
@@ -27,7 +27,7 @@ class CategorySchema(CategoryListSchema):
 
 
 class IngredientSchema(BaseModel):
-    id: str
+    id: int
     name: str
 
 
