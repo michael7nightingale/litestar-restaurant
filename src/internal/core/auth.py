@@ -1,9 +1,11 @@
+from functools import wraps
+
 from litestar.connection import ASGIConnection
 from litestar.types import Send, Scope, Receive, ASGIApp
 from litestar import Request, Response
 from litestar.response import Redirect
 from litestar.middleware import AbstractAuthenticationMiddleware, AuthenticationResult
-from litestar.exceptions import HTTPException
+from litestar.exceptions.http_exceptions import NotAuthorizedException, NotFoundException
 
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
@@ -39,13 +41,17 @@ def decode_jwt_token(encoded_token: str) -> Token | None:
         return
 
 
-def auth_exception_handler(request: Request, exc: HTTPException) -> Response:
+def auth_exception_handler(request: Request, exc: NotAuthorizedException) -> Response:
     return Redirect(request.app.route_reverse("login"))
 
 
 def login_required(func):
-    async def inner(request: Request, *args, **kwargs) -> Response:
-        res = await func(request, *args, **kwargs)
+    @wraps(func)
+    async def inner(*args, **kwargs) -> Response:
+        request = kwargs['request']
+        if request.user is None:
+            raise NotAuthorizedException("Authentication required.")
+        res = await func(*args, **kwargs)
         return res
     return inner
 
