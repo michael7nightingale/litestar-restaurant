@@ -9,6 +9,7 @@
                 <img src="/static/images/product/{{ product.image_path }}" width="100%"/>
             </div>
             <div class="row" style="margin: 30px">
+                <label hidden id="productId">{{ product.id }}</label>
                 <div class="col">
                     <h4 style="margin-bottom: 30px">
                         <a href="{{ url_for('category', category_slug=product['category.slug']) }}">
@@ -30,14 +31,18 @@
                     {% if product.volume %}
                     <h6>Объем: {{ product.volume }} мл</h6>
                     {% endif %}
+                <div>
 
+                <form method="post">
+                    <button class="btn btn-outline-primary" id="cart-button">В корзину</button>
+                </form>
+                </div>
                 </div>
                 <div class="col">
                     <div class="price">
                         <h6>{{ product.price }} ₽</h6>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -50,5 +55,25 @@
             liEl.children[0].className = "active"
         }
     }
+    let isInCart, amount;
+    let productId = document.getElementById("productId").innerText;
+    $.ajax({
+        url: `/api/is-in-cart/${productId}`,
+            headers: {'Authorization': document.cookie['']},
+        success: function success(data){
+            isInCart = data['is-in-cart'];
+            let cartButton = document.getElementById("cart-button");
+            if (isInCart){
+                amount = data['amount'];
+                cartButton.innerText = "Перейти в корзину";
+                cartButton.setAttribute("type", "button")
+                cartButton.onclick = function(){
+                    window.location = "/cart"
+                }
+            }
+        }
+    },
+    )
+
 </script>
 {% endblock %}
