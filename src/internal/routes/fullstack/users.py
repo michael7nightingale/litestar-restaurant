@@ -10,6 +10,13 @@ from schemas.users import UserLoginSchema, UserRegisterSchema
 from internal.core.auth import login_user as login_user_cookies, logout_user
 
 
+def get_previous_url(request: Request) -> str:
+    previous_url = request.cookies.get("previous-url")
+    if previous_url is None:
+        previous_url = request.app.route_reverse("homepage")
+    return previous_url
+
+
 class UsersController(Controller):
     path = "/users"
 
@@ -20,7 +27,7 @@ class UsersController(Controller):
     @get("/logout", name="logout", status_code=303)
     async def logout(self, request: Request) -> Redirect:
         logout_user(request)
-        return Redirect(request.app.route_reverse("homepage"))
+        return Redirect(get_previous_url(request))
 
     @post("/login", name="login_post", status_code=303)
     async def post_login(
@@ -32,7 +39,7 @@ class UsersController(Controller):
         if user is None:
             return Redirect(request.app.route_reverse("login"))
         login_user_cookies(request, user['id'])
-        return Redirect(request.app.route_reverse("homepage"))
+        return Redirect(get_previous_url(request))
 
     @get("/register", name="register")
     async def get_register(self) -> Template:
