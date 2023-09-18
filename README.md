@@ -1,5 +1,5 @@
 # Litestar restaurant fullstack application.
-Web app for restaurant using Litestart 2 framework and Piccolo ORM. Here I practice at new web-framework and ORM.
+Web app for restaurant using Litestar 2 framework and Piccolo ORM. Here I practice at new web-framework and ORM.
 Litestar is very interesting and delicious. Enjoy them at https://litestar.dev/ and https://piccolo-orm.com/.
 
 
