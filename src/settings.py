@@ -1,3 +1,5 @@
+import os
+
 from pydantic import BaseSettings
 
 
@@ -17,7 +19,10 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
 
     class Config:
-        env_file = ".env"
+        if os.getenv("DOCKER"):
+            env_file = ".env"
+        else:
+            env_file = "docker.env"
 
 
 def get_settings() -> Settings:

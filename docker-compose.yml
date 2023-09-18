@@ -9,7 +9,7 @@ services:
     env_file: "src/.env"
     command: >
       sh -c "piccolo migrations forwards all &&
-             uvicorn app:create_app --reload --host 0.0.0.0"
+             uvicorn app:create_app --reload --host 0.0.0.0 --port 800"
     depends_on:
       - db
     networks:
