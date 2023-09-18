@@ -32,9 +32,6 @@ class App:
                 DefineMiddleware(AuthenticationMiddleware),
 
             ],
-            exception_handlers={
-                NotAuthorizedException: auth_exception_handler,
-            }
 
         )
 
