@@ -1,14 +1,14 @@
-from functools import wraps
-
 from litestar.connection import ASGIConnection
+from litestar.datastructures import Cookie
 from litestar.types import Send, Scope, Receive, ASGIApp
 from litestar import Request, Response
 from litestar.response import Redirect
 from litestar.middleware import AbstractAuthenticationMiddleware, AuthenticationResult
-from litestar.exceptions.http_exceptions import NotAuthorizedException, NotFoundException
+from litestar.exceptions.http_exceptions import NotAuthorizedException
 
-from datetime import datetime, timedelta
 from jose import jwt, JWTError
+from datetime import datetime, timedelta
+from functools import wraps
 
 from settings import get_settings
 from db.services import get_user
@@ -56,9 +56,9 @@ def login_required(func):
     return inner
 
 
-def login_user(request: Request, user_id: str) -> None:
+def login_user(request: Response, user_id: str) -> None:
     token = encode_jwt_token(user_id)
-    request.cookies["authorization"] = token
+    request.cookies.append(Cookie(key="authorization", value=token))
 
 
 def logout_user(request: Request) -> None:

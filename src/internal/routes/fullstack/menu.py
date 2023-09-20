@@ -4,7 +4,6 @@ from litestar.response import Template, Redirect
 
 from db.services import (
     get_all_categories,
-    get_category_by_slug,
     get_products_by_category_slug,
     add_product_to_cart,
 
@@ -28,7 +27,7 @@ class MenuController(Controller):
         name="category",
         dependencies={"category": Provide(get_category)}
     )
-    async def category(self, category: dict) -> Template:
+    async def category(self, request: Request, category: dict) -> Template:
         context = {
             "category": category,
             "products": await get_products_by_category_slug(category["slug"])

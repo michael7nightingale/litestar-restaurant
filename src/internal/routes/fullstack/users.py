@@ -38,8 +38,8 @@ class UsersController(Controller):
         user = await login_user(data.phone)
         if user is None:
             return Redirect(request.app.route_reverse("login"))
-        login_user_cookies(request, user['id'])
-        return Redirect(get_previous_url(request))
+        login_user_cookies(response := Redirect(get_previous_url(request)), user['id'])
+        return response
 
     @get("/register", name="register")
     async def get_register(self) -> Template:

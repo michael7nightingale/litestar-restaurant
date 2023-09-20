@@ -16,7 +16,7 @@ class UsersController(Controller):
     @post("/register")
     async def register(
             self,
-            data: Annotated[UserRegisterSchema, Body(media_type=RequestEncodingType.URL_ENCODED)]
+            data: Annotated[UserRegisterSchema, Body()]
     ) -> dict:
         user = await create_user(**data.dict())
         if user is None:
@@ -29,7 +29,7 @@ class UsersController(Controller):
     @post("/login")
     async def login(
             self,
-            data: Annotated[UserLoginSchema, Body(media_type=RequestEncodingType.URL_ENCODED)]
+            data: Annotated[UserLoginSchema, Body()]
     ) -> dict:
         user = await login_user(data.phone)
         if not user:

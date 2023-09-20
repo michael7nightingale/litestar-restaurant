@@ -20,9 +20,9 @@ class Settings(BaseSettings):
 
     class Config:
         if os.getenv("DOCKER"):
-            env_file = ".env"
-        else:
             env_file = "docker.env"
+        else:
+            env_file = ".env"
 
 
 def get_settings() -> Settings:

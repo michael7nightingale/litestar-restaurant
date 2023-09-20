@@ -16,6 +16,5 @@ class CartController(Controller):
         context = {
             "cart": await get_cart(request.user.id)
         }
-        print(context)
         return Template("cart.html", context=context)
 

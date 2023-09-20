@@ -92,7 +92,7 @@ async def login_user(phone: str) -> dict | None:
 
 async def create_user(name: str, phone: str) -> dict | None:
     try:
-        users = await (
+        users_insert = await (
             User.insert(
                 User(
                     name=name,
@@ -100,10 +100,13 @@ async def create_user(name: str, phone: str) -> dict | None:
                 )
             )
         )
+        new_user = users_insert[0]
         await Cart.insert(
-            Cart(user=users[0]['id'])
+            Cart(user=new_user['id'])
         )
+        return new_user
     except Exception:
+        raise
         return None
 
 
