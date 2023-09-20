@@ -5,11 +5,8 @@ from litestar.response import Template, Redirect
 
 from typing import Annotated
 
-from db.services import (
-    create_table_reservation,
-    create_review, get_reviews,
-
-)
+from repositories.table_reservation import create_table_reservation
+from repositories.reviews import create_review, get_reviews
 from schemas.main import Reservation, Review
 
 

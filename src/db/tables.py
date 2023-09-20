@@ -91,8 +91,8 @@ class Order(Table, db=DB):
     cart = ForeignKey(Cart, unique=True, index=True)
     street = Varchar()
     home = Varchar()
-    comment = Varchar()
-    status = Varchar()
+    comment = Varchar(null=True)
+    status = Varchar(null=True)
     time_created = Timestamp()
     is_delivered = Boolean(default=False)
 

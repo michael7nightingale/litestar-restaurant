@@ -2,12 +2,8 @@ from litestar import Controller, get, post, Request
 from litestar.di import Provide
 from litestar.response import Template, Redirect
 
-from db.services import (
-    get_all_categories,
-    get_products_by_category_slug,
-    add_product_to_cart,
-
-)
+from repositories.menu import get_all_categories, get_products_by_category_slug
+from repositories.cart import add_product_to_cart
 from internal.dependencies.menu import get_product, get_category
 
 

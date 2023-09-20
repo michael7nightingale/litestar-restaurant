@@ -3,7 +3,7 @@ from litestar.di import Provide
 
 from internal.dependencies.menu import get_product, get_category
 from schemas.menu import CategorySchema, ProductSchema, CategoryListSchema
-from db.services import (
+from repositories.menu import (
     get_all_categories,
     get_products_by_category_slug,
 

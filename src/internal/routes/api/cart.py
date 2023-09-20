@@ -7,7 +7,7 @@ from typing import Annotated
 from internal.core.auth import login_required
 from internal.dependencies.cart import get_cart_product_user_dependency
 from schemas.cart import CartProductUpdateScheme
-from db.services import (
+from repositories.cart import (
     delete_cart_product as delete_cart_product_db,
     update_cart_product as update_cart_product_db,
     get_cart,

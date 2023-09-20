@@ -5,7 +5,7 @@ from litestar.response import Template, Redirect
 from litestar.params import Body
 from typing import Annotated
 
-from db.services import login_user, create_user
+from repositories.users import login_user, create_user
 from schemas.users import UserLoginSchema, UserRegisterSchema
 from internal.core.auth import login_user as login_user_cookies, logout_user
 

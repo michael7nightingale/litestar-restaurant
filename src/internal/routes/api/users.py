@@ -1,12 +1,11 @@
 from litestar import Controller, post
-from litestar.enums import RequestEncodingType
 from litestar.exceptions import HTTPException
 from litestar.params import Body
 
 from typing import Annotated
 
 from schemas.users import UserRegisterSchema, UserLoginSchema
-from db.services import login_user, create_user
+from repositories.users import login_user, create_user
 from internal.core.auth import encode_jwt_token
 
 

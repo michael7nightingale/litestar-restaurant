@@ -4,8 +4,8 @@ from litestar.enums import RequestEncodingType
 
 from typing import Annotated
 
-from db.services import create_table_reservation
 from schemas.main import Reservation
+from repositories.table_reservation import create_table_reservation
 
 
 class ContactController(Controller):

@@ -1,7 +1,7 @@
 from litestar import Controller, get, Request
 from litestar.response import Template, Redirect
 
-from db.services import get_cart
+from repositories.cart import get_cart
 from internal.core.auth import login_required
 
 
