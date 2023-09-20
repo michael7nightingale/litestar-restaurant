@@ -1,22 +1,15 @@
 from litestar import Controller, get, post, Request
 from litestar.di import Provide
-from litestar.exceptions import HTTPException
 from litestar.response import Template, Redirect
 
 from db.services import (
     get_all_categories,
     get_category_by_slug,
     get_products_by_category_slug,
-    get_product_with_ingredients_by_slug, add_product_to_cart,
+    add_product_to_cart,
 
 )
-
-
-async def get_product(category_slug: str, product_slug: str):
-    product = await get_product_with_ingredients_by_slug(category_slug, product_slug)
-    if not product:
-        raise HTTPException("product not found", status_code=404)
-    return product
+from internal.dependencies.menu import get_product, get_category
 
 
 class MenuController(Controller):
@@ -30,15 +23,23 @@ class MenuController(Controller):
         }
         return Template("menu.html", context=context)
 
-    @get("/{category_slug:str}", name="category")
-    async def category(self, category_slug: str) -> Template:
+    @get(
+        "/{category_slug:str}",
+        name="category",
+        dependencies={"category": Provide(get_category)}
+    )
+    async def category(self, category: dict) -> Template:
         context = {
-            "category": await get_category_by_slug(category_slug),
-            "products": await get_products_by_category_slug(category_slug)
+            "category": category,
+            "products": await get_products_by_category_slug(category["slug"])
         }
         return Template("category.html", context=context)
 
-    @get("/{category_slug:str}/{product_slug:str}", name="product", dependencies={'product': Provide(get_product)})
+    @get(
+        "/{category_slug:str}/{product_slug:str}",
+        name="product",
+        dependencies={'product': Provide(get_product)}
+    )
     async def product(self, product: dict) -> Template:
         context = {
             "product": product
