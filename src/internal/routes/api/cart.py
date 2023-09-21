@@ -16,7 +16,7 @@ from repositories.cart import (
 
 
 @get("/is-in-cart/{product_id:int}", dependencies={"product": Provide(get_cart_product_user_dependency)})
-async def is_in_user_cart(request: Request, product: dict) -> dict:
+async def is_in_user_cart(request: Request, product: dict | None) -> dict:
     if request.user is None:
         return {"is-in-cart": False}
     if product is None:
@@ -34,7 +34,7 @@ class CartController(Controller):
 
     @delete(
         "/{product_id:str}",
-        status_code=203,
+        status_code=202,
         dependencies={"product": Provide(get_cart_product_user_dependency)}
     )
     @login_required

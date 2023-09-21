@@ -1,7 +1,7 @@
 from db.tables import CartToProduct, Cart
 
 
-async def get_cart(user_id: int) -> list[dict]:
+async def get_cart(cart_id: str) -> list[dict]:
     return await (
         CartToProduct.select(
             CartToProduct.product.all_columns(),
@@ -9,20 +9,20 @@ async def get_cart(user_id: int) -> list[dict]:
             CartToProduct.cart.id,
             CartToProduct.product.category.all_columns()
         )
-        .where(CartToProduct.cart.user == user_id)
+        .where(CartToProduct.cart.id == cart_id)
     )
 
 
-async def get_cart_product(product_id: int, user_id: int) -> dict | None:
+async def get_cart_product(product_id: int, cart_id: int) -> dict | None:
     return await (
         CartToProduct.select(CartToProduct.all_columns(), CartToProduct.product.all_columns())
-        .where(CartToProduct.product.id == product_id, CartToProduct.cart.user.id == user_id)
+        .where(CartToProduct.product.id == product_id, CartToProduct.cart.id == cart_id)
         .first()
     )
 
 
-async def add_product_to_cart(product_id: int, user_id: str) -> dict | None:
-    cart = await Cart.select().where(Cart.user == user_id).first()
+async def add_product_to_cart(product_id: int, cart_id: str) -> dict | None:
+    cart = await Cart.select().where(Cart.id == cart_id).first()
     return await (
         CartToProduct.insert(
             CartToProduct(product=product_id, cart=cart['id'], amount=1)

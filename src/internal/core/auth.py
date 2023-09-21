@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 from functools import wraps
 
 from settings import get_settings
-from db.services import get_user
+from repositories.users import get_user
 from schemas.token import Token, ScopeUser
 
 
@@ -83,11 +83,12 @@ class AuthenticationMiddleware(AbstractAuthenticationMiddleware):
             token_model = decode_jwt_token(token)
             if token_model is not None:
                 user_data = await get_user(token_model.user_id)
-                user = ScopeUser(**user_data)
-                return AuthenticationResult(
-                    user=user,
-                    auth=token
-                )
+                if user_data is not None:
+                    user = ScopeUser(**user_data)
+                    return AuthenticationResult(
+                        user=user,
+                        auth=token
+                    )
         return AuthenticationResult(None, None)
 
     async def __call__(self, scope: "Scope", receive: "Receive", send: "Send") -> None:

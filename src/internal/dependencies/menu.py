@@ -1,6 +1,6 @@
 from litestar.exceptions import HTTPException
 
-from db.services import get_product_with_ingredients_by_slug, get_category_by_slug
+from repositories.menu import get_product_with_ingredients_by_slug, get_category_by_slug
 
 
 async def get_category(category_slug: str) -> dict:

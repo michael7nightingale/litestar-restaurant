@@ -1,6 +1,5 @@
+from pydantic import BaseModel, Field
 from datetime import datetime
-
-from pydantic import BaseModel
 
 
 class Token(BaseModel):
@@ -11,3 +10,5 @@ class Token(BaseModel):
 class ScopeUser(BaseModel):
     id: int
     name: str
+    phone: str
+    cart_id: str = Field(alias="cart")

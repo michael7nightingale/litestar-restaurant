@@ -20,18 +20,20 @@ async def login_user(phone: str) -> dict | None:
 
 async def create_user(name: str, phone: str) -> dict | None:
     try:
+        carts_insert = await Cart.insert(
+            Cart()
+        )
+        new_user_cart = carts_insert[0]
         users_insert = await (
             User.insert(
                 User(
                     name=name,
-                    phone=phone
+                    phone=phone,
+                    cart=new_user_cart['id']
                 )
             )
         )
         new_user = users_insert[0]
-        await Cart.insert(
-            Cart(user=new_user['id'])
-        )
         return new_user
     except Exception:
         return None
