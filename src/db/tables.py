@@ -6,14 +6,6 @@ from piccolo.columns import Varchar, Text, ForeignKey, Integer, M2M, LazyTableRe
 from .config import DB
 
 
-class User(Table, db=DB):
-    name = Varchar(required=True)
-    phone = Varchar(index=True, required=True, unique=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Category(Table, db=DB):
     name = Varchar(index=True)
     slug = Varchar(index=True)
@@ -62,12 +54,6 @@ class IngredientToProduct(Table, db=DB):
     product = ForeignKey(Product)
 
 
-class Review(Table, db=DB):
-    user = ForeignKey(User)
-    message = Text()
-    stars = Integer()
-
-
 class TableReservation(Table, db=DB):
     name = Varchar(length=100)
     phone = Varchar(length=20)
@@ -77,8 +63,16 @@ class TableReservation(Table, db=DB):
 
 
 class Cart(Table, db=DB):
-    user = ForeignKey(User, unique=True, index=True)
     goods = M2M(LazyTableReference("CartToGood", app_name="db"))
+
+
+class User(Table, db=DB):
+    name = Varchar(required=True)
+    phone = Varchar(index=True, required=True, unique=True)
+    cart = ForeignKey(Cart, unique=True, index=True)
+
+    def __str__(self):
+        return self.name
 
 
 class CartToProduct(Table, db=DB):
@@ -87,8 +81,15 @@ class CartToProduct(Table, db=DB):
     amount = Integer()
 
 
+class Review(Table, db=DB):
+    user = ForeignKey(User)
+    message = Text()
+    stars = Integer()
+
+
 class Order(Table, db=DB):
-    cart = ForeignKey(Cart, unique=True, index=True)
+    user = ForeignKey(User)
+    cart = ForeignKey(Cart)
     street = Varchar()
     home = Varchar()
     comment = Varchar(null=True)
