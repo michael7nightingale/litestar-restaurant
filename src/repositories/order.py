@@ -3,6 +3,7 @@ from db.tables import Order, CartToProduct
 
 async def create_order(
         cart_id: str,
+        user_id: str,
         home: str,
         street: str,
         comment: str | None = None,
@@ -11,6 +12,7 @@ async def create_order(
     return (await (
         Order.insert(
             Order(
+                user=user_id,
                 cart=cart_id,
                 home=home,
                 status=status,
@@ -21,10 +23,10 @@ async def create_order(
     ))[0]
 
 
-async def get_order(user_id: str) -> dict | None:
+async def get_order(cart_id: int) -> dict | None:
     return await (
         Order.select(Order.all_columns())
-        .where(Order.cart.user.id == user_id)
+        .where(Order.cart.id == cart_id)
         .first()
     )
 

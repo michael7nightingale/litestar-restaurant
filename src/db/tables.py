@@ -89,7 +89,7 @@ class Review(Table, db=DB):
 
 class Order(Table, db=DB):
     user = ForeignKey(User)
-    cart = ForeignKey(Cart)
+    cart = ForeignKey(Cart, unique=True)
     street = Varchar()
     home = Varchar()
     comment = Varchar(null=True)

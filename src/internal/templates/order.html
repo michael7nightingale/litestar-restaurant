@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- ***** Menu Area Starts ***** -->
+<section class="section" id="menu">
+    <div class="container">
+        <div class="row">
+            <h3>Заказ №{{ order.id }}</h3>
+        </div>
+
+        <div class="row">
+             <h3>Аддрес: ул. {{ order.street}}, д. {{ order.home }} {% if order.flat %}, кв. {{ order.flat }} {% endif %}</h3>
+        </div>
+
+        <div class="row">
+             <h3>Статус: {{ order.status }}</h3>
+        </div>
+
+        <div class="row">
+             <h3>Оформлен {{ order.time_created.strftime('%H:%M, %d-%m-%Y') }}</h3>
+        </div>
+
+        <div class="row">
+             <h3>Комментарий: {{ order.comment }}</h3>
+        </div>
+    </div>
+</section>
+<!-- ***** Menu Area Ends ***** -->
+
+<script>
+    for (let liEl of document.getElementsByClassName("scroll-to-section")){
+        if (liEl.innerText === "Аккаунт"){
+            liEl.children[0].className = "active"
+        }
+    }
+</script>
+{% endblock %}

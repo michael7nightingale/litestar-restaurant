@@ -11,4 +11,4 @@ class ScopeUser(BaseModel):
     id: int
     name: str
     phone: str
-    cart_id: str = Field(alias="cart")
+    cart_id: int = Field(alias="cart")

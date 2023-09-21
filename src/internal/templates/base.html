@@ -62,6 +62,7 @@
                                         </svg>
                                     </a>
                                 </li>
+                                <li><a href="{{ url_for('current_order') }}">Заказ</a></li>
                                 <li><a href="{{ url_for('logout') }}">Выйти</a></li>
                                 {% else %}
                                 <li><a href="{{ url_for('login') }}">Войти</a></li>

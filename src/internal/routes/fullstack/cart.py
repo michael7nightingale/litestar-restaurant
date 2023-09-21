@@ -1,4 +1,4 @@
-from litestar import Controller, get, Request
+from litestar import Controller, get, Request, post
 from litestar.response import Template, Redirect
 
 from repositories.cart import get_cart
@@ -17,4 +17,3 @@ class CartController(Controller):
             "cart": await get_cart(request.user.id)
         }
         return Template("cart.html", context=context)
-

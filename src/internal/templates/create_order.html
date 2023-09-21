@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- ***** Menu Area Starts ***** -->
+<section class="section" id="menu">
+    <div class="container">
+        <form method="post">
+            <div class="row">
+                  <label>
+                    Улица
+                    <input type="text" class="form-control" name="street" required/>
+                </label>
+            </div>
+            <div class="row">
+                   <label>
+                        Дом
+                        <input type="text" class="form-control" name="home" required/>
+                    </label>
+            </div>
+
+            <div class="row">
+                  <label>
+                Комментарий
+                <input type="text" class="form-control" name="comment">
+             </label>
+            </div>
+            <button class="btn btn-outline-primary">Сделать заказ</button>
+
+        </form>
+    </div>
+</section>
+<!-- ***** Menu Area Ends ***** -->
+
+<script>
+    for (let liEl of document.getElementsByClassName("scroll-to-section")){
+        if (liEl.innerText === "Меню"){
+            liEl.children[0].className = "active"
+        }
+    }
+</script>
+{% endblock %}
